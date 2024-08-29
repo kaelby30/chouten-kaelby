@@ -50,11 +50,11 @@ async function buildModules() {
             await $`echo "Building module ${module.name}"`;
             const moduleFile = Bun.file(`./dist/modules/${module.name}/code.js`);
             const moduleContent = await moduleFile.text();
+            await $`bun -e "${moduleContent}; let instance = new source.default(); console.log(JSON.stringify(instance.metadata))" > ./dist/modules/${module.name}/metadata.json && echo "Module Metadata file created"`;
             const zip = new AdmZip();
             zip.addLocalFolder(`./dist/modules/${module.name}`);
             zip.writeZip(`./dist/modules/${module.name}.module`);
             await $`echo "Built module ${module.name}"`;
-            await $`bun -e "${moduleContent}; let instance = new source.default(); console.log(JSON.stringify(instance.metadata))" > ./dist/modules/${module.name}/metadata.json && echo "Module Metadata file created"`;
             const metadataModule = JSON.parse(await Bun.file(`./dist/modules/${module.name}/metadata.json`).text());
             metadata.modules!.push({
                 name: module.name,
@@ -64,7 +64,7 @@ async function buildModules() {
                 subtypes: metadataModule.subtypes,
                 filePath: `./dist/modules/${module.name}.module`
             });
-           await rmdir(`./dist/modules/${module.name}`, { recursive: true });
+        //    await rmdir(`./dist/modules/${module.name}`, { recursive: true });
         }
         await $`echo "Built all modules"`;
     }
