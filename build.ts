@@ -24,6 +24,7 @@ interface Module {
     name: string;
     version: string;
     iconPath: string;
+    author : string;
     id: string;
     subtypes: string[];
     filePath: string;
@@ -61,6 +62,7 @@ async function buildModules() {
                 version: metadataModule.version,
                 iconPath: `./icons/${module.name}.png`,
                 id: metadataModule.id,
+                author : metadataModule.author,
                 subtypes: metadataModule.subtypes,
                 filePath: `./dist/modules/${module.name}.module`
             });
