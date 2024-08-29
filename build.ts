@@ -66,7 +66,7 @@ async function buildModules() {
                 subtypes: metadataModule.subtypes,
                 filePath: `./dist/modules/${module.name}.module`
             });
-        //    await rmdir(`./dist/modules/${module.name}`, { recursive: true });
+        await rmdir(`./dist/modules/${module.name}`, { recursive: true });
         }
         await $`echo "Built all modules"`;
     }

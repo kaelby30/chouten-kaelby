@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: macos-latest
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,17 +20,20 @@ jobs:
 
       - name: Install dependencies
         run: bun install
-    
+        
       - name: Build
         run: bun run build
-      
-      - name: Commit and push
+        
+      - name: Create and push built branch
         run: |
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
+          git checkout -b built
           git add -A
           git commit -m "Built repo" || exit 0
-          git push
-        env:
-          REPO_NAME: ${{github.event.repository.name}}
-          REPO_OWNER: ${{github.repository_owner}}
+          git push origin built --force
+          
+          # Preserve styles folder and index.html
+          git checkout main -- styles index.html
+          git commit -m "Preserved styles and index.html" || exit 0
+          git push origin built --force
