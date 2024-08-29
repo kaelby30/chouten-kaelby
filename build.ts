@@ -30,7 +30,7 @@ interface Module {
 }
 let metadata : Metadata = 
     {
-    url: "https://kealby.github.io",
+    url: "https://kaelby30.github.io/chouten-kaelby",
     title: "Kealby's Modules",
     iconPath: "./icons/icon.png",
     id: "kealby",
