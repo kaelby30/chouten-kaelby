@@ -58,7 +58,7 @@ async function buildModules() {
             await $`echo "Built module ${module.name}"`;
             const metadataModule = JSON.parse(await Bun.file(`./dist/modules/${module.name}/metadata.json`).text());
             metadata.modules!.push({
-                name: module.name,
+                name: module.name.charAt(0).toUpperCase() + module.name.slice(1).toLowerCase(),
                 version: metadataModule.version,
                 iconPath: `./icons/${module.name}.png`,
                 id: metadataModule.id,
@@ -76,7 +76,7 @@ async function buildModules() {
 async function createMetadataFile() {
     log.info("Building modules");
     await buildModules();
-    await Bun.write("metadata.json", JSON.stringify(metadata));
+    await Bun.write("metadata.json", JSON.stringify(metadata,null,2));
     $`echo "Repo Metadata file created"`;    
 }
 
