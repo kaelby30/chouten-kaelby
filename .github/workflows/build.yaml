@@ -29,11 +29,18 @@ jobs:
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
           git checkout -b built
+          
+          # Move dist, index.html, and styles to a temporary location
+          mkdir ../temp
+          mv dist index.html styles ../temp
+          
+          # Remove everything else
+          git rm -rf .
+          
+          # Move the preserved items back
+          mv ../temp/* .
+          rmdir ../temp
+          
           git add -A
           git commit -m "Built repo" || exit 0
-          git push origin built --force
-          
-          # Preserve styles folder and index.html
-          git checkout main -- styles index.html
-          git commit -m "Preserved styles and index.html" || exit 0
           git push origin built --force
