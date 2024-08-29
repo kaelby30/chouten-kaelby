@@ -28,9 +28,9 @@ jobs:
         run: |
           git fetch origin built || git checkout --orphan built
           git reset --hard
-          git checkout main -- index.html styles dist
+          git checkout main -- index.html styles dist metadata.json
           git rm -rf --cached .
-          git add dist index.html styles
+          git add dist index.html styles metadata.json
         
       - name: Commit and push to built branch
         run: |
