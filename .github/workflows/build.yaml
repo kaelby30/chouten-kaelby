@@ -32,7 +32,7 @@ jobs:
           
           # Move dist, index.html, styles, and metadata.json to a temporary location
           mkdir ../temp
-          mv dist index.html styles metadata.json ../temp
+          mv dist icons index.html styles metadata.json ../temp
           
           # Remove everything else
           git rm -rf .
