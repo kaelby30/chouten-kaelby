@@ -1,0 +1,1 @@
+{"url":"https://kealby.github.io","title":"Kealby's Modules","iconPath":"./icons/icon.png","id":"kealby","author":"Kealby","description":"Chouten modules from Kealby","modules":[{"name":"neko-sama","version":"0.0.3","iconPath":"./icons/neko-sama.png","id":"nekosama","subtypes":["Anime"],"filePath":"./dist/modules/neko-sama.module"}]}
