@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+    
+      - name: Build
+        run: bun run build
+      
+      - name: Commit and push
+        run: |
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+          git add -A
+          git commit -m "Built repo" || exit 0
+          git push
+        env:
+          REPO_NAME: ${{github.event.repository.name}}
+          REPO_OWNER: ${{github.repository_owner}}
