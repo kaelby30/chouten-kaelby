@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: macos-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,23 +24,17 @@ jobs:
       - name: Build
         run: bun run build
         
-      - name: Create and push built branch
+      - name: Prepare built branch
+        run: |
+          git fetch origin built || git checkout --orphan built
+          git reset --hard
+          git checkout main -- index.html styles dist
+          git rm -rf --cached .
+          git add dist index.html styles
+        
+      - name: Commit and push to built branch
         run: |
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
-          git checkout -b built
-          
-          # Move dist, index.html, and styles to a temporary location
-          mkdir ../temp
-          mv dist index.html styles ../temp
-          
-          # Remove everything else
-          git rm -rf .
-          
-          # Move the preserved items back
-          mv ../temp/* .
-          rmdir ../temp
-          
-          git add -A
-          git commit -m "Built repo" || exit 0
-          git push origin built --force
+          git commit -m "Built repo" || echo "No changes to commit"
+          git push -f origin HEAD:built
