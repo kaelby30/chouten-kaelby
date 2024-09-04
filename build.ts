@@ -2,13 +2,6 @@ import { readdir,rmdir } from "node:fs/promises";
 import * as Bun from "bun";
 import { $ } from "bun";
 import AdmZip from "adm-zip";
-import log from 'log';
-
-console.log = log.info;
-console.error = log.error;
-console.warn = log.warn;
-console.info = log.info;
-console.debug = log.debug;
 
 interface Metadata {
     url: string;
@@ -46,7 +39,6 @@ async function buildModules() {
         if (module.isDirectory()) {
             // run esbuild ./src/neko-sama/neko-sama.ts --bundle --target=safari11 --outfile=code.js --global-name=source but with the module name
             await $`bun esbuild ./src/modules/${module.name}/${module.name}.ts --bundle --target=safari11 --outfile=./dist/modules/${module.name}/code.js --global-name=source`;
-            log.info("Copying icon file")
             await $`cp ./icons/${module.name}.png ./dist/modules/${module.name}/icon.png && echo "Copied icon.png file"`;
             await $`echo "Building module ${module.name}"`;
             const moduleFile = Bun.file(`./dist/modules/${module.name}/code.js`);
@@ -72,9 +64,7 @@ async function buildModules() {
     }
 }
 
-
 async function createMetadataFile() {
-    log.info("Building modules");
     await buildModules();
     await Bun.write("metadata.json", JSON.stringify(metadata,null,2));
     $`echo "Repo Metadata file created"`;    
