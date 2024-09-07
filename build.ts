@@ -25,10 +25,10 @@ interface Module {
 let metadata : Metadata = 
     {
     url: "https://kaelby30.github.io/chouten-kaelby",
-    title: "Kealby's Modules",
+    title: "Kaelby's Modules",
     iconPath: "./icons/icon.png",
-    id: "kealby",
-    author: "Kealby",
+    id: "kaelby",
+    author: "Kaelby",
     description: "Chouten modules from Kealby",
     modules: [] as Module[]
 }
