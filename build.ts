@@ -60,8 +60,8 @@ async function buildModules() {
             });
         await rmdir(`./dist/modules/${module.name}`, { recursive: true });
         }
-        await $`echo "Built all modules"`;
     }
+    await $`echo "Built all modules"`;
 }
 
 async function createMetadataFile() {
