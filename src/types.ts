@@ -8,6 +8,7 @@ declare global {
    * @param body - Body of the request in string form
    */
   function request(url: string, method: "GET" | "POST" | "PUT" | "HEAD" | "DELETE" | "CONNECT" | "OPTIONS" | "PATCH" | "TRACE", headers?: Record<string, string>, body?: string): Promise<Response>;
+  function callWebview(url: string, method: "GET" | "POST" | "PUT" | "HEAD" | "DELETE" | "CONNECT" | "OPTIONS" | "PATCH" | "TRACE", headers?: Record<string, string>, body?: string): Promise<Response>;
 }
 
 export abstract class BaseModule {
