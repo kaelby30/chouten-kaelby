@@ -34,7 +34,7 @@ export default class VoirAnime extends BaseModule implements VideoContent {
     description: "Chouten module for VoirAnime,only stape works for now on the apps",
     type: ModuleType.Source,
     subtypes: ["Anime"],
-    version: "0.0.1",
+    version: "0.0.2",
   };
 
   settings: ModuleSettings = [
