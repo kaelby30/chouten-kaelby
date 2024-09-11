@@ -1,0 +1,32 @@
+{
+  "url": "https://kaelby30.github.io/chouten-kaelby",
+  "title": "Kaelby's Modules",
+  "iconPath": "./icons/icon.png",
+  "id": "kaelby",
+  "author": "Kaelby",
+  "description": "Chouten modules from Kealby",
+  "modules": [
+    {
+      "name": "Voiranime",
+      "version": "0.0.2",
+      "iconPath": "./icons/voiranime.png",
+      "id": "voiranime",
+      "author": "Kaelby",
+      "subtypes": [
+        "Anime"
+      ],
+      "filePath": "./dist/modules/voiranime.module"
+    },
+    {
+      "name": "Neko-sama",
+      "version": "0.0.3",
+      "iconPath": "./icons/neko-sama.png",
+      "id": "nekosama",
+      "author": "Kaelby",
+      "subtypes": [
+        "Anime"
+      ],
+      "filePath": "./dist/modules/neko-sama.module"
+    }
+  ]
+}
