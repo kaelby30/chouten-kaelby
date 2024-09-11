@@ -70,7 +70,7 @@ export default class VoirAnime extends BaseModule implements VideoContent {
       const title = itemRef.find(".h4").text().trim();
       const url = itemRef.find("a").attr("href") ?? "";
       const poster = itemRef.find("img").attr("src") ?? "";
-      const indicator = itemRef.find(".manga-vf-flag") ? "VF" : "VOSTFR";
+      const indicator = itemRef.find(".manga-vf-flag").text().includes('VF') ? "VF" : "VOSTFR";
       items.push({
         url,
         titles: {
@@ -90,7 +90,7 @@ export default class VoirAnime extends BaseModule implements VideoContent {
       },
       results: items,
     };
-  }
+}
 
   async info(_url: string): Promise<InfoData> {
     let status: Status = Status.UNKNOWN;
