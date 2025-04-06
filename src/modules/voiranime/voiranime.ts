@@ -252,7 +252,7 @@ export default class VoirAnime extends BaseModule implements VideoContent {
               let trackMatches = setupContent.match(/tracks:\s*(\[.*?\])/s);
               if (trackMatches) {
                 let subtitlesArray = trackMatches[1];
-                let tracks = eval(subtitlesArray);
+                let tracks = JSON.parse(subtitlesArray.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2":').replace(/'/g, '"'));
                 let subtitles : SubtitleData[] = tracks.map((track: any) => {
                   if (track.kind === "captions") {
                     return {
