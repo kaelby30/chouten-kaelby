@@ -1,5 +1,2 @@
 node_modules
-__MACOSX
-.DS_Store
-package-lock.json
 bun.lockb
