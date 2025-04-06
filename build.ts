@@ -35,8 +35,10 @@ let metadata : Metadata =
 
 async function buildModules() {
     const modulesDir = await readdir("./src/modules", { withFileTypes: true });
+    const blacklistFile = await Bun.file("blacklist.json").json()
+    const blacklist = blacklistFile.blacklist as string[];
     for (const module of modulesDir) {
-        if (module.isDirectory()) {
+        if (module.isDirectory() && !blacklist.some((element) => element === module.name)) {
             // run esbuild ./src/neko-sama/neko-sama.ts --bundle --target=safari11 --outfile=code.js --global-name=source but with the module name
             await $`bun esbuild ./src/modules/${module.name}/${module.name}.ts --bundle --target=safari11 --outfile=./dist/modules/${module.name}/code.js --global-name=source`;
             await $`cp ./icons/${module.name}.png ./dist/modules/${module.name}/icon.png && echo "Copied icon.png file"`;
