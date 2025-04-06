@@ -1,4 +1,3 @@
-import { HomeScraper } from "./scraper/homeScraper";
 import {
   BaseModule,
   InfoData,
@@ -14,13 +13,16 @@ import {
   InputSetting,
   SourceList,
   DiscoverData,
-  SeasonData,
   MediaInfo,
-  SourceData,
   MediaDataType,
-  SubtitleType,
   SubtitleData,
+  MediaItem,
+  SubtitleType,
   SearchData,
+  SourceData,
+  SeasonData,
+  SkipData,
+  MediaPreview
 } from "../../types";
 import { load } from "cheerio";
 
@@ -31,10 +33,10 @@ export default class VoirAnime extends BaseModule implements VideoContent {
     name: "VoirAnime",
     iconPath: "./icons/voiranime.png",
     author: "Kaelby",
-    description: "Chouten module for VoirAnime,only stape works for now on the apps",
+    description: "Chouten module for VoirAnime",
     type: ModuleType.Source,
     subtypes: ["Anime"],
-    version: "0.0.2",
+    version: "0.0.3",
   };
 
   settings: ModuleSettings = [
@@ -52,10 +54,66 @@ export default class VoirAnime extends BaseModule implements VideoContent {
     },
   ];
 
-  baseName: string = this.baseUrl; //this.getSettingValue("Domain");
+  baseName: string = this.baseUrl;
 
   async discover(): Promise<DiscoverData> {
-    return await new HomeScraper(this.baseName).scrape();
+    const data: DiscoverData = [];
+    const resp = await request(this.baseName, "GET");
+    const $ = load(resp.body);
+
+    // Latest Episodes
+    const latestEpisodes: SearchData[] = [];
+    $(".page-item-detail").each((_, elem) => {
+      const title = $(elem).find(".post-title").text().trim();
+      const url = $(elem).find("a").first().attr("href") || "";
+      const poster = $(elem).find("img").attr("src") || "";
+      const indicator = $(elem).find(".episode").text().trim();
+
+      latestEpisodes.push({
+        url,
+        titles: {
+          primary: title
+        },
+        poster,
+        indicator
+      });
+    });
+
+    if (latestEpisodes.length > 0) {
+      data.push({
+        title: "Latest Episodes",
+        type: 0,
+        data: latestEpisodes
+      });
+    }
+
+    // Popular Anime
+    const popularAnime: SearchData[] = [];
+    $(".c-tabs-item__content").each((_, elem) => {
+      const title = $(elem).find(".h4").text().trim();
+      const url = $(elem).find("a").attr("href") || "";
+      const poster = $(elem).find("img").attr("src") || "";
+      const indicator = $(elem).find(".manga-vf-flag").text().includes('VF') ? "VF" : "VOSTFR";
+
+      popularAnime.push({
+        url,
+        titles: {
+          primary: title
+        },
+        poster,
+        indicator
+      });
+    });
+
+    if (popularAnime.length > 0) {
+      data.push({
+        title: "Popular Anime",
+        type: 2,
+        data: popularAnime
+      });
+    }
+
+    return data;
   }
 
   async search(query: string, page: number): Promise<SearchResult> {
@@ -252,7 +310,8 @@ export default class VoirAnime extends BaseModule implements VideoContent {
               let trackMatches = setupContent.match(/tracks:\s*(\[.*?\])/s);
               if (trackMatches) {
                 let subtitlesArray = trackMatches[1];
-                let tracks = JSON.parse(subtitlesArray.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2":').replace(/'/g, '"'));
+                console.log(subtitlesArray);
+                let tracks = eval(subtitlesArray);
                 let subtitles : SubtitleData[] = tracks.map((track: any) => {
                   if (track.kind === "captions") {
                     return {
@@ -295,16 +354,16 @@ export default class VoirAnime extends BaseModule implements VideoContent {
                     }
                   }
                   return {
-                    skips: [],
+                    skips: [] as SkipData[],
                     streams: sources.map((source) => {
                       return {
                         quality: source.name,
                         file: source.url,
                         type: MediaDataType.HLS,
                       };
-                    }),
-                    subtitles,
-                    previews: [],
+                    }) as MediaItem[],
+                    subtitles: subtitles as SubtitleData[],
+                    previews: [] as MediaPreview[],
                   };
                 } catch (e) {
                   console.error("Error parsing sources:", e);
@@ -328,23 +387,23 @@ export default class VoirAnime extends BaseModule implements VideoContent {
       fh = fh.replace(/\'/g, "");
       const url = `https:${fh}${sh}`;
       return {
-        skips: [],
+        skips: [] as SkipData[],
         streams: [
           {
             quality: "Default",
             file: url,
             type: MediaDataType.MP4,
           },
-        ],
-        subtitles: [],
-        previews: [],
+        ] as MediaItem[],
+        subtitles: [] as SubtitleData[],
+        previews: [] as MediaPreview[],
       };
     }
     return {
-      skips: [],
-      streams: [],
-      subtitles: [],
-      previews: [],
+      skips: [] as SkipData[],
+      streams: [] as MediaItem[],
+      subtitles: [] as SubtitleData[],
+      previews: [] as MediaPreview[]
     };
   }
 }
